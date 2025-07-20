@@ -24,8 +24,19 @@ pipeline{
                      '''
                  }
 
-        }
 
+        }
+        stage ("checking if scm sechdule is working"){
+            agent any 
+            steps{
+                    sh ''' 
+                        echo "Checking if SCM schedule is working"
+                        git status
+                        git log -1
+                     '''
+                 }
+
+        }
         stage("deploy"){
             agent {docker {
                 
