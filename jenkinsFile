@@ -78,4 +78,10 @@ post {
         junit 'test-results/junit.xml'
         archiveArtifacts artifacts: 'build/**', fingerprint: true
     }
+    always {
+        echo "slack notifications"
+        slackSend channel: '#build-notifications', 
+                   color: 'good', 
+                   message: "Build ${currentBuild.fullDisplayName} completed successfully. Check console output at ${env.BUILD_URL}"
+    }
 }}
