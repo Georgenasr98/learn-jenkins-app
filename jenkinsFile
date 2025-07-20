@@ -75,10 +75,6 @@ pipeline{
 
 post {
     always {
-        junit 'test-results/junit.xml'
-        archiveArtifacts artifacts: 'build/**', fingerprint: true
-    }
-    always {
         echo "slack notifications"
         slackSend channel: '#build-notifications', 
                    color: 'good', 
