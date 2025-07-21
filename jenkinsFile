@@ -44,47 +44,51 @@ pipeline{
                  }
 
         }
-        // stage("deploy"){
-        //     agent {docker {
+        stage("deploy"){
+            agent {docker {
                 
-        //          image 'node:18-alpine'
-        //          reuseNode true
+                 image 'node:18-alpine'
+                 reuseNode true
 
-        //      }}
-        //     steps{
-        //             sh ''' 
-        //                     npm install netlify-cli -g
-        //                     netlify --version
-        //                     echo "Deploying to production. Site ID: ${NETLIFY_SITE_ID}"
-        //                     netlify status
-        //                     netlify deploy --prod --dir=build --no-build
-        //                     echo "Deployment complete."
+             }}
+            steps{
+                    sh ''' 
+                            npm install netlify-cli -g
+                            netlify --version
+                            echo "Deploying to production. Site ID: ${NETLIFY_SITE_ID}"
+                            netlify status
+                            netlify deploy --prod --dir=build --no-build
+                            echo "Deployment complete."
 
 
-        //               '''
-        //          }
+                      '''
+                 }
 
-        // }
-        // stage("test"){
-        //         agent {docker {
+        }
+        stage("test"){
+                agent {docker {
                 
-        //          image 'node:18-alpine'
-        //          reuseNode true}}
-        //     steps{
-        //             sh ''' 
-        //                 test -f build/index.html
-        //                 npm test
-        //              '''
-        //          }
+                 image 'node:18-alpine'
+                 reuseNode true}}
+            steps{
+                    sh ''' 
+                        test -f build/index.html
+                        npm test
+                     '''
+                 }
 
-        // }
+        }
+
+
+
+
 }
 
 post {
     always {
         echo "slack notifications"
         slackSend channel: '#build-notifications', 
-                   color: COLOR_MAP[currentBuild.currentResult] , 
-                   message: "*${currentBuild.currentResult}:* - Job: `${env.JOB_NAME}` - Build: `${env.BUILD_NUMBER}`",
+                   color: COLOR_MAP[currentBuild.currentResult], 
+                   message: "*${currentBuild.currentResult}:* - Job: `${env.JOB_NAME}` - Build: `${env.BUILD_NUMBER}`"
     }
 }}
