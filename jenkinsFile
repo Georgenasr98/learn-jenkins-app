@@ -1,3 +1,10 @@
+def COLOR_MAP = [
+    SUCCESS: 'good',
+    UNSTABLE: 'warning',
+    FAILURE: 'danger',
+    ABORTED: 'danger',
+    NOT_BUILT: 'warning'
+]
 pipeline{
     agent any
     environment{
@@ -78,6 +85,6 @@ post {
         echo "slack notifications"
         slackSend channel: '#build-notifications', 
                    color: COLOR_MAP[currentBuild.currentResult] , 
-                   message: "Build ${currentBuild.fullDisplayName} completed successfully. Check console output at ${env.BUILD_URL}"
+                   message: "*${currentBuild.currentResult}:* - Job: `${env.JOB_NAME}` - Build: `${env.BUILD_NUMBER}`",
     }
 }}
